@@ -1,0 +1,60 @@
+// Ghostagotchi Database Schema
+// This schema defines the data models for the virtual ghost pet application
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User profile information (1-to-1 with Supabase auth.users)
+model Profile {
+  id        String   @id @db.Uuid
+  username  String?  @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Relationships
+  pet       Pet?
+
+  @@map("profiles")
+}
+
+// Virtual ghost pet with stats and metadata
+model Pet {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @unique @map("user_id") @db.Uuid
+  name         String
+  level        Int       @default(1)
+  experience   Int       @default(0)
+  hunger       Int       @default(100)
+  mood         Int       @default(100)
+  lastFedAt    DateTime? @map("last_fed_at")
+  lastPlayedAt DateTime? @map("last_played_at")
+  ghostPersona String?   @map("ghost_persona")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  
+  // Relationships
+  profile      Profile   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@map("pets")
+}
+
+// Chat message history between user and ghost
+model Message {
+  id        Int      @id @default(autoincrement())
+  petId     String   @map("pet_id") @db.Uuid
+  sender    String   // 'user' or 'ghost'
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  // Relationships
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}

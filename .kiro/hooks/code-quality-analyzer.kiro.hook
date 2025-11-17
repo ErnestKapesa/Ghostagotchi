@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "Code Quality Analyzer",
+  "description": "Monitors source code files for changes and provides suggestions for code quality improvements, including identifying code smells, recommending design patterns, and highlighting best practices for readability, maintainability, and performance",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.swift",
+      "**/*.prisma"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the modified code files for potential improvements. Focus on:\n\n1. **Code Smells**: Identify any code smells such as duplicated code, long functions, large classes, excessive parameters, or inappropriate coupling\n2. **Design Patterns**: Suggest applicable design patterns that could improve the code structure\n3. **Best Practices**: Check adherence to language-specific best practices (TypeScript/React for web, Swift/SwiftUI for iOS, Prisma for database)\n4. **Readability**: Evaluate variable naming, function clarity, comments, and overall code organization\n5. **Maintainability**: Assess modularity, separation of concerns, and ease of future modifications\n6. **Performance**: Identify potential performance bottlenecks or optimization opportunities (e.g., unnecessary re-renders, inefficient queries, memory leaks)\n7. **Security**: Flag any potential security issues (e.g., exposed secrets, SQL injection risks, improper auth checks)\n8. **Type Safety**: Ensure proper TypeScript typing and Swift type usage\n\nProvide specific, actionable suggestions while maintaining the existing functionality. Prioritize improvements that have the highest impact on code quality."
+  }
+}
